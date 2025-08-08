@@ -831,11 +831,18 @@ function buildMaterial( material, textures, quickLookCompatible = false ) {
 
 		}
 
-		textureNode.addProperty(
-			`token inputs:sourceColorSpace = "${
-				texture.colorSpace === NoColorSpace ? 'raw' : 'sRGB'
-			}"`
-		);
+        let sourceColorSpace = 'raw'; // Default para dados não-colorimétricos
+
+        if (texture.colorSpace === SRGBColorSpace) {
+            sourceColorSpace = 'sRGB';
+        } else if (texture.colorSpace === LinearSRGBColorSpace || texture.colorSpace === NoColorSpace) {
+            sourceColorSpace = 'raw';
+        }
+
+        textureNode.addProperty(
+            `token inputs:sourceColorSpace = "${sourceColorSpace}"`
+        );
+
 		textureNode.addProperty(
 			`token inputs:wrapS = "${WRAPPINGS[ texture.wrapS ]}"`
 		);
